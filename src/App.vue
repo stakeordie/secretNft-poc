@@ -1,46 +1,93 @@
 <template>
   <div id="app">
-    <h1>{{ token.symbol }}</h1>
-    <p>Balance: {{ balance }}</p>
-    <p>Decimals: {{ token.decimals }}</p>
-    <button @click="createVk">Creat Viewing key</button>
-    <button @click="getBalance">Get balance</button>
+    <h1>Transfer your assets to recepient</h1>
+    <form @submit.prevent="transfer">
+      <select @change="getNFTInfo" name="" id="" v-model="tokenSelected">
+        <option value="">Select a NFT from your collection</option>
+        <option v-bind:key="t" v-for="t in tokens" :v-model="t">
+          {{ t }}
+        </option>
+      </select>
+      <input type="text" v-model="recipientAddr" />
+      <button>Transfer</button>
+    </form>
+    <button class="vk" @click="createViewingKey">createViewingKey</button>
+    <dl>
+      <h2>NFT token info:</h2>
+      <dt>Name :</dt>
+      <dd>{{ this.nftInfo.name }}</dd>
+      <dt>Description :</dt>
+      <dd>{{ this.nftInfo.description }}</dd>
+      <dt>Rarity :</dt>
+      <dd v-if="this.nftInfo.rarity.number">
+        {{ this.nftInfo.rarity.number }} out of {{ this.nftInfo.rarity.total }}
+      </dd>
+      <dt>image :</dt>
+      <dd>{{ this.nftInfo.image }}</dd>
+    </dl>
   </div>
 </template>
 
 <script>
+import { sodt } from "./contracts/sodt.js";
+import {
+  getAddress,
+  onAccountAvailable,
+  viewingKeyManager,
+} from "@stakeordie/griptape.js";
+
 const decoder = new TextDecoder();
-import sefi from "./contracts/sefi";
-import { viewingKeyManager, coinConvert } from "@stakeordie/griptape.js";
+
 export default {
   name: "App",
   data() {
     return {
-      token: "Loading...",
-      balance: "",
+      tokenSelected: "",
+      recipientAddr: "",
+      tokens: [],
+      nftInfo: {
+        rarity: {
+          number: "",
+          total: "",
+        },
+      },
     };
   },
   async mounted() {
-    const { token_info } = await sefi.getTokenInfo();
-    this.token = token_info;
-    this.getBalance();
+    onAccountAvailable(async () => {
+      await this.getTokens();
+    });
   },
   methods: {
-    async createVk() {
-      const res = await sefi.createViewingKey();
+    async transfer() {
+      console.log("Transfering assets");
+      if (!this.recipientAddr || !this.tokenSelected) return;
+      const res = await sodt.transfer(
+        this.recipientAddr,
+        this.tokenSelected,
+        `You will transfer ownership of this asset to ${this.recipientAddr}`
+      );
+      console.log(res);
+      await this.getTokens();
+    },
+    async getTokens() {
+      const address = getAddress();
+      const { token_list } = await sodt.getTokens(address);
+      const { tokens } = token_list;
+      this.tokens = tokens;
+    },
+    async createViewingKey() {
+      const res = await sodt.createViewingKey();
       const data = decoder.decode(res.data);
       const json = JSON.parse(data);
       console.log(json.create_viewing_key.key);
-      viewingKeyManager.add(sefi, json.create_viewing_key.key);
+      viewingKeyManager.add(sodt, json.create_viewing_key.key);
     },
-    async getBalance() {
-      const res = await sefi.getBalance();
-      this.balance = coinConvert(
-        res.balance.amount,
-        this.token.decimals,
-        "human"
-      );
-      console.log(this.balance);
+    async getNFTInfo() {
+      const { nft_info } = await sodt.getNftInfo(this.tokenSelected);
+      const properties = JSON.parse(nft_info.properties);
+      this.nftInfo = { ...nft_info, ...properties };
+      console.log(this.nftInfo);
     },
   },
 };
@@ -48,11 +95,31 @@ export default {
 
 <style>
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  width: 100vw;
+  height: 100vh;
+  display: block;
+}
+h1 {
+  width: 100vw;
+  height: fit-content;
   text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+}
+select,
+input,
+button {
+  padding: 1rem;
+  height: fit-content;
+}
+form {
+  display: flex;
+  justify-content: center;
+}
+.vk,
+dl {
+  margin: 20px 30%;
+}
+dt {
+  font-weight: 700;
+  padding: 0.5rem 0;
 }
 </style>
