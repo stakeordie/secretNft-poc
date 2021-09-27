@@ -1,17 +1,47 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js App" />
+    <h1>{{ token.symbol }}</h1>
+    <p>Balance: {{ balance }}</p>
+    <p>Decimals: {{ token.decimals }}</p>
+    <button @click="createVk">Creat Viewing key</button>
+    <button @click="getBalance">Get balance</button>
   </div>
 </template>
 
 <script>
-import HelloWorld from "./components/HelloWorld.vue";
-
+const decoder = new TextDecoder();
+import sefi from "./contracts/sefi";
+import { viewingKeyManager, coinConvert } from "@stakeordie/griptape.js";
 export default {
   name: "App",
-  components: {
-    HelloWorld,
+  data() {
+    return {
+      token: "Loading...",
+      balance: "",
+    };
+  },
+  async mounted() {
+    const { token_info } = await sefi.getTokenInfo();
+    this.token = token_info;
+    this.getBalance();
+  },
+  methods: {
+    async createVk() {
+      const res = await sefi.createViewingKey();
+      const data = decoder.decode(res.data);
+      const json = JSON.parse(data);
+      console.log(json.create_viewing_key.key);
+      viewingKeyManager.add(sefi, json.create_viewing_key.key);
+    },
+    async getBalance() {
+      const res = await sefi.getBalance();
+      this.balance = coinConvert(
+        res.balance.amount,
+        this.token.decimals,
+        "human"
+      );
+      console.log(this.balance);
+    },
   },
 };
 </script>
