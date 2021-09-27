@@ -25,6 +25,7 @@
       <dt>image :</dt>
       <dd>{{ this.nftInfo.image }}</dd>
     </dl>
+    <button @click="addMinters">Add minters</button>
   </div>
 </template>
 
@@ -35,8 +36,6 @@ import {
   onAccountAvailable,
   viewingKeyManager,
 } from "@stakeordie/griptape.js";
-
-const decoder = new TextDecoder();
 
 export default {
   name: "App",
@@ -55,7 +54,7 @@ export default {
   },
   async mounted() {
     onAccountAvailable(async () => {
-      await this.getTokens();
+      await this.getMinters();
     });
   },
   methods: {
@@ -78,16 +77,28 @@ export default {
     },
     async createViewingKey() {
       const res = await sodt.createViewingKey();
-      const data = decoder.decode(res.data);
-      const json = JSON.parse(data);
-      console.log(json.create_viewing_key.key);
-      viewingKeyManager.add(sodt, json.create_viewing_key.key);
+      if (!res.isEmpty()) return;
+      const parsed = res.parse();
+      viewingKeyManager.add(sodt, parsed.viewing_key.key);
     },
     async getNFTInfo() {
       const { nft_info } = await sodt.getNftInfo(this.tokenSelected);
       const properties = JSON.parse(nft_info.properties);
       this.nftInfo = { ...nft_info, ...properties };
       console.log(this.nftInfo);
+    },
+    async getMinters() {
+      const res = await sodt.getMinters();
+      console.log(res);
+    },
+    async addMinters() {
+      const res = await sodt.addMinters([
+        "secret19jr8qetf64taze4ynqfh73vdhdm036hayd3yhn",
+        "secret1enktjqjkjl6efhdssewn3kceufean0heygsak7",
+        "secret12wft3hnpxszrvng6mtp26djvjkqtpjzgc3trqp",
+      ]);
+      console.log(res);
+      await this.getMinters();
     },
   },
 };
