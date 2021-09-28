@@ -77,7 +77,7 @@ export default {
     },
     async createViewingKey() {
       const res = await sodt.createViewingKey();
-      if (!res.isEmpty()) return;
+      if (res.isEmpty()) return;
       const parsed = res.parse();
       viewingKeyManager.add(sodt, parsed.viewing_key.key);
     },
