@@ -20,6 +20,13 @@ const def = {
         },
       };
     },
+    burnNFT({ padding }, token_id) {
+      return {
+        handleMsg: {
+          burn_nft: {token_id, padding},
+        },
+      };
+    },
   },
   queries: {
     getMinters() {

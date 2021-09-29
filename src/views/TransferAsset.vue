@@ -9,8 +9,9 @@
         </option>
       </select>
       <input type="text" v-model="recipientAddr" />
-      <button>Transfer</button>
+      <button :disabled="disabledTransferButton">Transfer</button>
     </form>
+    <button @click="burnNFT" :disabled="disabledBurnNftButton">Burn NFT</button>
     <button class="vk" @click="createViewingKey">createViewingKey</button>
     <dl>
       <h2>NFT token info:</h2>
@@ -55,6 +56,14 @@ export default {
       await this.getTokens();
     });
   },
+  computed: {
+      disabledBurnNftButton() {
+          return !this.tokenSelected;
+      },
+      disabledTransferButton() {
+          return !this.recipientAddr || !this.tokenSelected;
+      }
+  },
   methods: {
     async transfer() {
       console.log("Transfering assets");
@@ -66,6 +75,7 @@ export default {
       );
       console.log(res);
       await this.getTokens();
+      this.clearNftInfo();
     },
     async getTokens() {
       const address = getAddress();
@@ -102,6 +112,23 @@ export default {
       ]);
       console.log(res);
       await this.getMinters();
+    },
+    async burnNFT() {
+      console.log("burning NFT");
+      const token = this.tokenSelected;
+      if(!this.tokenSelected) return;
+      const res = await sodt.burnNFT(this.tokenSelected);
+      if(res) {
+        console.log("burned "+token+" succesfully")
+      }
+      console.log(res);
+      await this.getTokens();
+      this.clearNftInfo();
+    },
+    clearNftInfo() {
+        this.nftInfo = {
+            rarity: null,
+        };
     },
   },
 };
