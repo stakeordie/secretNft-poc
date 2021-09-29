@@ -27,6 +27,13 @@ const def = {
         },
       };
     },
+    batchMintNft({ padding }, mints = []) {
+      return {
+        handleMsg: {
+          batch_mint_nft: { mints, padding }
+        }
+      }
+    }
   },
   queries: {
     getMinters() {

@@ -3,6 +3,10 @@
     <div class="upload-nft">
       <input type="file" id="assetsFieldHandle" @change="uploadDocument" ref="fileInput" accept="image/*">
     </div>
+    <div class="quantity">
+      <span class="header">Quantity</span> <br/>
+      <input type="number" v-model="quantity"> <br/>  
+    </div>
     <div class="public-metadata">
       <h3>Public Metadata</h3>
       <span class="header">Name</span> <br/>
@@ -16,15 +20,6 @@
       <input type="text" v-model="privateMetadata.name"> <br/>
       <span class="header">Description</span> <br/>
       <input type="text" v-model="privateMetadata.description">
-    </div>
-    <div class="serial-number">
-      <h3>Serial Number</h3>
-      <span class="header">Mint Run</span> <br/>
-      <input type="number" min="1" v-model="serialNumber.mint_run"> <br/>
-      <span class="header">Serial Number</span> <br/>
-      <input type="number" min="1" v-model="serialNumber.serial_number"> <br/>
-      <span class="header">Quantity minted this run</span> <br/>
-      <input type="number" min="1" v-model="serialNumber.quantity_minted_this_run">
     </div>
     <div class="royalty-info">
       <h3>Royalty Info</h3>
@@ -74,6 +69,7 @@ export default {
                 royalties: [],
             },
             rate: 0,
+            quantity: null,
             memo: "",
             files: [],
         }
@@ -101,23 +97,49 @@ export default {
                 return v.toString(16);
             });
         },
+        generateMintList(address) {
+            const mints = [];
+            for(let i = 0; i < this.quantity; i++) {
+                let mint = {
+                    token_id: this.generateUuid(),
+                    owner: address,
+                    public_metadata: this.publicMetadata,
+                    private_metadata: this.privateMetadata,
+                    memo: this.memo
+                }
+                mints.push(mint);
+            }
+            return mints;
+        },
         async mintNft(imagePath) {
             const tokenId = this.generateUuid();
             const address = getAddress();
             const royalty = this.generateRoyaltyInfo(address);
-            
+
             this.publicMetadata.image = imagePath;
             this.privateMetadata.image = imagePath;
             this.royaltyInfo.royalties.push(royalty); 
 
-            const response = await sodt.mintNft(tokenId, address, this.publicMetadata, this.privateMetadata, this.serialNumber, this.royaltyInfo, this.memo);
-            console.log("mintNft", response);
+            if(this.quantity && typeof Number(this.quantity) === 'number' && this.quantity > 1) {
 
-            if (response.isEmpty()) {
-                return;
+                const mints = this.generateMintList(address);
+                const response = await sodt.batchMintNft(mints);
+
+                if (response.isEmpty()) {
+                    return;
+                }
+                const parsed = response.parse();
+                console.log("mintNftClones", parsed);   
+
+            } else {
+                const response = await sodt.mintNft(tokenId, address, this.publicMetadata, this.privateMetadata, this.serialNumber, this.royaltyInfo, this.memo);
+
+                if (response.isEmpty()) {
+                    return;
+                }
+                const parsed = response.parse();
+                console.log("mintNft", parsed);   
             }
-            const parsed = response.parse();
-            console.log("parsed", parsed);
 
             this.clearForm();
         },
@@ -127,11 +149,11 @@ export default {
         async saveFilesOnPinata() {
             const file = this.files.at(-1);
             const response = await pinFileToIPFS(pinataApiKey, pinataApiSecret, file);
-            const { data } = response;
-            const imageHash = data.IpfsHash;
-            const imagePath = pinataImageUrlBase.concat('/', imageHash);
 
             if (response.status == 200) {
+                const { data } = response;
+                const imageHash = data.IpfsHash;
+                const imagePath = pinataImageUrlBase.concat('/', imageHash);
                 this.mintNft(imagePath);
             }
         },
@@ -175,9 +197,17 @@ input[type=number] {
   -moz-appearance: textfield; 
 }
 
+input[type=file] {
+  margin: 8px 0px; 
+}
+
 
 button {
     margin: 8px 8px 0px 0px;
+}
+
+div.mint-nft {
+    padding-top: 32px;
 }
 
 </style>

@@ -24,7 +24,7 @@ const router = new Router({
         {
             path: '/transaction-history',
             name: 'TransactionHistory',
-            component: () => import ('./views/TransactionHistory')
+            component: () => import ('./views/TransactionHistory.vue')
         }
     ]
 });
