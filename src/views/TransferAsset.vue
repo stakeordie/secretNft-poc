@@ -17,6 +17,8 @@
       <h2>NFT token info:</h2>
       <dt>Name :</dt>
       <dd>{{ this.nftInfo.name }}</dd>
+      <dt>Owner :</dt>
+      <dd>{{ NFTOwner }}</dd>
       <dt>Description :</dt>
       <dd>{{ this.nftInfo.description }}</dd>
       <dt>Rarity :</dt>
@@ -25,7 +27,7 @@
       </dd>
       <dt>image :</dt>
       <dd>{{ this.nftInfo.image }}</dd>
-      <img :src="this.nftInfo.image" style="width:50%; height:50%;" />
+      <img v-if="this.nftInfo.image" :src="this.nftInfo.image" style="width:50%; height:50%;" />
     </dl>
     <button @click="addMinters">Add minters</button>
   </div>
@@ -45,6 +47,7 @@ export default {
     return {
       tokenSelected: "",
       recipientAddr: "",
+      NFTOwner: "",
       tokens: [],
       nftInfo: {
         rarity: null,
@@ -99,6 +102,7 @@ export default {
         this.nftInfo = nft_info;
         console.log("getNFTInfo", nft_info);
       }
+      this.getOwnerOf();
     },
     async getMinters() {
       const res = await sodt.getMinters();
@@ -129,6 +133,16 @@ export default {
         this.nftInfo = {
             rarity: null,
         };
+        this.NFTOwner = "";
+        this.tokenSelected = "";
+    },
+    async getOwnerOf() {
+      const { owner_of } = await sodt.getOwnerOf(this.tokenSelected);
+      if (owner_of.owner) {
+        const { owner } = owner_of;
+        this.NFTOwner = owner;
+        console.log(this.NFTOwner);
+      } else return;
     },
   },
 };
