@@ -13,6 +13,13 @@ const def = {
         },
       };
     },
+    mintNft({ padding }, token_id = "", owner = "", public_metadata  = {}, private_metadata  = {}, serial_number = {}, royalty_info  = {}, memo = "") {
+      return {
+        handleMsg: {
+          mint_nft: { token_id, owner, public_metadata, private_metadata, serial_number, royalty_info, memo, padding },
+        },
+      };
+    },
   },
   queries: {
     getMinters() {
