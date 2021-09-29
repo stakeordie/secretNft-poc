@@ -27,7 +27,6 @@
       <img :src="this.nftInfo.image" style="width:50%; height:50%;" />
     </dl>
     <button @click="addMinters">Add minters</button>
-    <button @click="$router.push({name: 'MintNft'})">New View</button>
   </div>
 </template>
 

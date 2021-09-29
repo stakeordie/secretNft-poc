@@ -20,6 +20,11 @@ const router = new Router({
             path: '/transfer-asset',
             name: 'TransferAsset',
             component: () => import ('./views/TransferAsset.vue')
+        },
+        {
+            path: '/transaction-history',
+            name: 'TransactionHistory',
+            component: () => import ('./views/TransactionHistory')
         }
     ]
 });

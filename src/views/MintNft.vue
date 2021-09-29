@@ -39,7 +39,6 @@
       <input type="text" v-model="memo">
     </div>
     <button @click="saveFilesOnPinata()" :disabled="isFilesEmpty">Save Files</button>
-    <button @click="$router.push({name: 'TransferAsset'})">Transfer Asset View</button>
   </div>
 </template>
 
@@ -86,7 +85,7 @@ export default {
                 !this.privateMetadata.name || !this.privateMetadata.description);
         }
     },
-    mounted() {
+    async mounted() {
         onAccountAvailable(async () => {});
     },
     methods: {
