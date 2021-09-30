@@ -30,6 +30,11 @@ const router = new Router({
             path: '/nft-details/:tokenId',
             name: 'NftDetails',
             component: () => import ('./views/NftDetails.vue')
+        },
+        {
+            path: '/aprove-revoke',
+            name: 'Permissions',
+            component: () => import ('./views/permissions.vue')
         }
     ]
 });
