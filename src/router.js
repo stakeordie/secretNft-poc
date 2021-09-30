@@ -25,6 +25,11 @@ const router = new Router({
             path: '/transaction-history',
             name: 'TransactionHistory',
             component: () => import ('./views/TransactionHistory.vue')
+        },
+        {
+            path: '/nft-details/:tokenId',
+            name: 'NftDetails',
+            component: () => import ('./views/NftDetails.vue')
         }
     ]
 });

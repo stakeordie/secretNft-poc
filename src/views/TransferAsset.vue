@@ -12,6 +12,7 @@
       <button :disabled="disabledTransferButton">Transfer</button>
     </form>
     <button @click="burnNFT" :disabled="disabledBurnNftButton">Burn NFT</button>
+    <button @click="$router.push({name: 'NftDetails', params: { tokenId: tokenSelected }})" :disabled="disabledBurnNftButton">Nft Details</button>
     <button class="vk" @click="createViewingKey">createViewingKey</button>
     <dl>
       <h2>NFT token info:</h2>

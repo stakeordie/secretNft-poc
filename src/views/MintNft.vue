@@ -179,6 +179,7 @@ export default {
             this.rate = 0;
             this.memo = "";
             this.files = [];
+            this.quantity = null;
             document.getElementById('assetsFieldHandle').value = null;
         }
     }
