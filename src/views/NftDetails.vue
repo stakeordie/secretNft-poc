@@ -4,10 +4,18 @@
         <span class="sub-title"> Description </span>
         <p class="description"> {{ nftInfo.description }} </p>
         <p class="owner">Owner: {{ owner }} </p>
-        <img :src="this.nftInfo.image" /> <br/>
-        <button @click="burnNFT()">Burn NFT</button>
+        <img :src="nftInfo.image" /> <br/>
+        <button @click="burnNFT()">Burn this NFT</button>
+        <hr>
+        <div class="private-metadata" v-if="privateMetadata">
+            <h4>Private Metadata</h4>
+            <p class="title">Name: {{ privateMetadata.name }} </p>
+            <p class="description">Description: {{ privateMetadata.description }} </p>
+            <p class="image">Image: {{ privateMetadata.image }} </p>
+        </div>
         <hr>
         <div class="transfer-nft">
+            <h4>Transfer this nft</h4>
             <input type="text" placeholder="Address" v-model="recipientAddr" />
             <button @click="transferNft()" :disabled="disabledTransferButton">Transfer</button>
         </div>
@@ -25,6 +33,7 @@ export default {
             tokenId: "",
             owner: "",
             recipientAddr: "",
+            privateMetadata: null,
             nftInfo: null,
         }
     },
@@ -42,6 +51,7 @@ export default {
     methods: {
         async getNFTInfo() {
             this.getOwnerOf();
+            this.getPrivateMetadata();
 
             const { nft_info } = await sodt.getNftInfo(this.tokenId);
             if (nft_info.properties) {
@@ -84,6 +94,11 @@ export default {
             console.log("NFT Transfered Response: ", res);
 
             this.goToMainPage("Transfered");
+        },
+        async getPrivateMetadata() {
+            const { private_metadata } = await sodt.getPrivateMetadata(this.tokenId);
+            this.privateMetadata = private_metadata;
+            console.log("getPrivateMetadata: ", this.privateMetadata);
         },
         goToMainPage(action) {
             alert("The NFT was " + action);
