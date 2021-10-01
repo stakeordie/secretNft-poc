@@ -133,45 +133,53 @@ export default {
     async getGlobalApprovalForAll(type) {
         let res = null;
         if(!type) {
+            const requestObject = {
+                view_owner: this.view_owner,
+                view_priavte_metadata: this.view_priavte_metadata,
+            }
             if (this.perrmisionWithExpiration) {
                 res = await sodt.setGlobalApproval(
-                    this.view_owner,
-                    this.view_priavte_metadata,
+                    requestObject,
                     {"at_time":this.expirationDate}
                     );
             }
             else {
                 res = await sodt.setGlobalApproval(
-                    this.view_owner,
-                    this.view_priavte_metadata,
+                    requestObject,
                     "never"
                     );
             }
         }
         else if(type == 'ownership') {
+            const requestObject = {
+                view_owner: this.view_owner,
+            }
             if (this.perrmisionWithExpiration) {
                 res = await sodt.setGlobalApproval(
-                    this.view_owner,
+                    requestObject,
                     {"at_time":this.expirationDate}
                     );
             }
             else {
                 res = await sodt.setGlobalApproval(
-                    this.view_owner,
+                    requestObject,
                     "never"
                     );
             }
         }
         else if(type == 'data') {
+            const requestObject = {
+                view_priavte_metadata: this.view_priavte_metadata,
+            }
             if (this.perrmisionWithExpiration) {
                 res = await sodt.setGlobalApproval(
-                    this.view_priavte_metadata,
+                    requestObject,
                     {"at_time":this.expirationDate}
                     );
             }
             else {
                 res = await sodt.setGlobalApproval(
-                    this.view_priavte_metadata,
+                    requestObject,
                     "never"
                     );
             }
@@ -183,11 +191,14 @@ export default {
     async getGlobalApprovalForToken(type) {
         let res = null;
         if(!type) {
+            const requestObject = {
+                token_id: this.permissionToken,
+                view_owner: this.view_owner,
+                view_priavte_metadata: this.view_priavte_metadata,
+            }
             if (this.perrmisionWithExpiration) {
                 res = await sodt.setGlobalApproval(
-                    this.permissionToken,
-                    this.view_owner,
-                    this.view_priavte_metadata,
+                    requestObject,
                     {"at_time":this.expirationDate}
                     );
             }
@@ -201,10 +212,13 @@ export default {
             }
         }
         else if(type == 'ownership') {
+            const requestObject = {
+                token_id: this.permissionToken,
+                view_owner: this.view_owner,
+            }
             if (this.perrmisionWithExpiration) {
                 res = await sodt.setGlobalApproval(
-                    this.permissionToken,
-                    this.view_owner,
+                    requestObject,
                     {"at_time":this.expirationDate}
                     );
             }
@@ -217,17 +231,19 @@ export default {
             }
         }
         else if(type == 'data') {
+            const requestObject = {
+                token_id: this.permissionToken,
+                view_priavte_metadata: this.view_priavte_metadata,
+            }
             if (this.perrmisionWithExpiration) {
                 res = await sodt.setGlobalApproval(
-                    this.permissionToken,
-                    this.view_priavte_metadata,
+                    requestObject,
                     {"at_time":this.expirationDate}
                     );
             }
             else {
                 res = await sodt.setGlobalApproval(
-                    this.permissionToken,
-                    this.view_priavte_metadata,
+                    requestObject,
                     "never"
                     );
             }

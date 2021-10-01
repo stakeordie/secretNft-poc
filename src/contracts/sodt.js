@@ -34,10 +34,10 @@ const def = {
         },
       };
     },
-    setGlobalApproval({padding}, requestObject = {}) {
+    setGlobalApproval({padding}, requestObject = {}, expires) {
       return {
         handleMsg: {
-          set_global_approval: {requestObject, padding}
+          set_global_approval: {expires, requestObject, padding}
         },
       };
     },
