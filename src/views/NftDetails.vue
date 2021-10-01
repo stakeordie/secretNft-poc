@@ -4,8 +4,8 @@
         <span class="sub-title"> Description </span>
         <p class="description"> {{ nftInfo.description }} </p>
         <p class="owner">Owner: {{ owner }} </p>
-        <p class="owner" v-if="ownerName">Owner name: {{ ownerName }} </p>
-        <img style="width:300px;height:300px;" :src="nftInfo.image" /> <br/>
+        <p class="owner">Owner name: {{ ownerName }} </p>
+        <img :src="nftInfo.image" /> <br/>
         <button @click="burnNFT()">Burn this NFT</button>
         <hr>
         <div class="private-metadata" v-if="privateMetadata">
@@ -19,13 +19,6 @@
             <h4>Transfer this nft</h4>
             <input type="text" placeholder="Address" v-model="recipientAddr" />
             <button @click="transferNft()" :disabled="disabledTransferButton">Transfer</button>
-        </div>
-        <br> 
-        <br>
-        <div>
-            <h4>Change the description</h4>
-            <input type="text" placeholder="new description" v-model="description" />
-            <button @click="changeDescription">Accept new description</button>
         </div>
     </div>
 </template>
@@ -53,10 +46,6 @@ const users = [
         name: "moises",
         token: "secret15re76j9uxu78hnruwknxg4canfsxzv26d3g4g3"
     },
-    {
-        name: "taco",
-        token: "secret12wft3hnpxszrvng6mtp26djvjkqtpjzgc3trqp"
-    },
 ];
 
 import { sodt } from "../contracts/sodt.js";
@@ -71,10 +60,7 @@ export default {
             recipientAddr: "",
             privateMetadata: null,
             nftInfo: null,
-            ownerName: "",
-            publicMetadata: {
-                description: '',
-            },
+            ownerName: ""
         }
     },
     async mounted() {
@@ -114,10 +100,6 @@ export default {
             } else { 
                 return;
             };
-        },
-        async changeDescription() {
-            const res = await sodt.setMetadata(this.tokenId, this.publicMetadata);
-            console.log(res)
         },
         async burnNFT() {
             console.log("burning NFT");
