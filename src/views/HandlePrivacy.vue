@@ -16,7 +16,7 @@
                 <span>Expires</span>
                 <input type="checkbox" name="expires" v-model="perrmisionWithExpiration">
                 <span v-if="perrmisionWithExpiration">
-                    <input type="number" name="expiration-date" placeholder="seconds" v-model="expirationDate">
+                    <input type="date" name="expiration-date" placeholder="seconds" v-model="expirationDate">
                 </span>
             </div>
             <div class="section">
@@ -140,7 +140,7 @@ export default {
             if (this.perrmisionWithExpiration) {
                 res = await sodt.setGlobalApproval(
                     requestObject,
-                    {"at_time":this.expirationDate}
+                    {"at_time": parseInt(this.expirationDate)}
                     );
             }
             else {
@@ -157,7 +157,7 @@ export default {
             if (this.perrmisionWithExpiration) {
                 res = await sodt.setGlobalApproval(
                     requestObject,
-                    {"at_time":this.expirationDate}
+                    {"at_time": parseInt(this.expirationDate)}
                     );
             }
             else {
@@ -174,7 +174,7 @@ export default {
             if (this.perrmisionWithExpiration) {
                 res = await sodt.setGlobalApproval(
                     requestObject,
-                    {"at_time":this.expirationDate}
+                    {"at_time": parseInt(this.expirationDate)}
                     );
             }
             else {
@@ -199,7 +199,7 @@ export default {
             if (this.perrmisionWithExpiration) {
                 res = await sodt.setGlobalApproval(
                     requestObject,
-                    {"at_time":this.expirationDate}
+                    {"at_time": parseInt(this.expirationDate)}
                     );
             }
             else {
@@ -219,7 +219,7 @@ export default {
             if (this.perrmisionWithExpiration) {
                 res = await sodt.setGlobalApproval(
                     requestObject,
-                    {"at_time":this.expirationDate}
+                    {"at_time": parseInt(this.expirationDate)}
                     );
             }
             else {
@@ -238,7 +238,7 @@ export default {
             if (this.perrmisionWithExpiration) {
                 res = await sodt.setGlobalApproval(
                     requestObject,
-                    {"at_time":this.expirationDate}
+                    {"at_time": parseInt(this.expirationDate)}
                     );
             }
             else {
