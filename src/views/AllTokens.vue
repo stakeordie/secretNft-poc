@@ -25,7 +25,7 @@ const users = [
         token: "secret1enktjqjkjl6efhdssewn3kceufean0heygsak7"
     },
     {
-        name: "techDaddy",
+        name: "step tech daddy",
         token: "secret1660mkxrw598letk3ztw5lnk98hyf6h7x4w9jrl"
     },
     {
