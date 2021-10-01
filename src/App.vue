@@ -1,31 +1,16 @@
 <template>
   <div id="app">
-    <h1>Transfer your assets to recepient</h1>
-    <form @submit.prevent="transfer">
-      <select @change="getNFTInfo" name="" id="" v-model="tokenSelected">
-        <option value="">Select a NFT from your collection</option>
-        <option v-bind:key="t" v-for="t in tokens" :v-model="t">
-          {{ t }}
-        </option>
-      </select>
-      <input type="text" v-model="recipientAddr" />
-      <button>Transfer</button>
-    </form>
-    <button class="vk" @click="createViewingKey">createViewingKey</button>
-    <dl>
-      <h2>NFT token info:</h2>
-      <dt>Name :</dt>
-      <dd>{{ this.nftInfo.name }}</dd>
-      <dt>Description :</dt>
-      <dd>{{ this.nftInfo.description }}</dd>
-      <dt>Rarity :</dt>
-      <dd v-if="this.nftInfo.rarity.number">
-        {{ this.nftInfo.rarity.number }} out of {{ this.nftInfo.rarity.total }}
-      </dd>
-      <dt>image :</dt>
-      <dd>{{ this.nftInfo.image }}</dd>
-    </dl>
-    <button @click="addMinters">Add minters</button>
+    <nav>
+      <button @click="$router.push({name: 'TransferAsset'})">Transfer Asset View</button>
+      <button @click="$router.push({name: 'MintNft'})">Mint NFT View</button>
+      <button @click="$router.push({name: 'TransactionHistory'})">Transaction History View</button>
+      <button @click="$router.push({name: 'Permissions'})">NFT Permissions</button>
+      <button @click="$router.push({name: 'HandlePrivacy'})">Handle Privacy</button>
+      <button @click="$router.push({name: 'AllTokens'})">See All Tokens</button>
+      <button @click="$router.push({name: 'ContractInfo'})">Contract Info</button>
+      <button @click="$router.push({name: 'Whitelist'})">Whitelist</button>
+    </nav>
+    <router-view/>
   </div>
 </template>
 
