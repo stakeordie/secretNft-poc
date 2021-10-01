@@ -40,6 +40,11 @@ const router = new Router({
             path: '/aprove-revoke',
             name: 'Permissions',
             component: () => import ('./views/permissions.vue')
+        },
+        {
+            path: '/handle-privacy',
+            name: 'HandlePrivacy',
+            component: () => import ('./views/HandlePrivacy.vue')
         }
     ]
 });
