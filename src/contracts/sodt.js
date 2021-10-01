@@ -31,9 +31,30 @@ const def = {
       return {
         handleMsg: {
           batch_mint_nft: { mints, padding }
-        }
-      }
-    }
+        },
+      };
+    },
+    setGlobalApproval({padding}, view_owner, view_private_metadata, expires) {
+      return {
+        handleMsg: {
+          set_global_approval: {expires, view_private_metadata, view_owner,  padding}
+        },
+      };
+    },
+    makeOwnershipPrivate({padding}) {
+      return {
+        handleMsg: {
+          make_ownership_private: {padding}
+        },
+      };
+    },
+    setMetadata({padding}, token_id, public_metadata  = {}) {
+      return {
+        handleMsg: {
+          set_metadata: {public_metadata, token_id, padding}
+        },
+      };
+    },
   },
   queries: {
     getMinters() {
