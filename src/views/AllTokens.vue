@@ -3,7 +3,10 @@
     <h1>List of all NFT’s</h1>
     <h4>search by name</h4>
     <input type="text" placeholder="name" v-model="ownersName" />
-    <button @click="getAllTokens">search</button>
+    <button @click="searchByOwnersName">search</button>
+    <h4>search by token</h4>
+    <input type="text" placeholder="nft token" v-model="currentToken" />
+    <button @click="searchByToken">search</button>
     <ul>
         <li v-bind:key="index" v-for="(nft, index) in allNFTsInfo">
             <h2>{{ tokens[index] }}</h2>
@@ -59,7 +62,8 @@ export default {
       tokens: [],
       allNFTsInfo: [],
       nftInfo: null,
-      ownersName: ""
+      ownersName: "",
+      currentToken:""
     };
   },
   async mounted() {
@@ -73,23 +77,33 @@ export default {
       },
   },
   methods: {
+    async searchByOwnersName() {
+      this.allNFTsInfo = [];
+      const userInfo = users.filter(user => user.name == this.ownersName || user.token == this.ownersName);
+      const [first] = userInfo;
+      console.table({name: first.name, code: first.token})
+      const { token_list } = await sodt.getTokens(first.token)
+      this.tokens = {...token_list};
+      const { tokens } = token_list;
+      this.tokens = tokens;
+      await this.getAllNFTInfo();
+    },
+    async searchByToken() {
+      this.allNFTsInfo = [];
+      const { token_list } = await sodt.allTokens();
+      this.tokens = {...token_list};
+      const { tokens } = token_list;
+      const token = tokens.filter(thisToken => thisToken == this.currentToken);
+      console.log(token)
+      this.tokens = token;
+      await this.getAllNFTInfo();
+    },
     async getAllTokens() {
       this.allNFTsInfo = [];
-      if(!this.ownersName) {
-        const { token_list } = await sodt.allTokens();
-        this.tokens = {...token_list};
-        const { tokens } = token_list;
-        this.tokens = tokens;
-      }
-      else {
-        const userInfo = users.filter(user => user.name == this.ownersName || user.token == this.ownersName);
-        const [first] = userInfo;
-        console.table({name: first.name, code: first.token})
-        const { token_list } = await sodt.getTokens(first.token)
-        this.tokens = {...token_list};
-        const { tokens } = token_list;
-        this.tokens = tokens;
-      }
+      const { token_list } = await sodt.allTokens();
+      this.tokens = {...token_list};
+      const { tokens } = token_list;
+      this.tokens = tokens;
       console.log(this.tokens)
       await this.getAllNFTInfo();
     },
