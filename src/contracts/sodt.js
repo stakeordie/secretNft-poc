@@ -31,9 +31,16 @@ const def = {
       return {
         handleMsg: {
           batch_mint_nft: { mints, padding }
-        }
-      }
-    }
+        },
+      };
+    },
+    setMetadata({padding}, token_id, public_metadata  = {}) {
+      return {
+        handleMsg: {
+          set_metadata: {public_metadata, token_id, padding}
+        },
+      };
+    },
   },
   queries: {
     getMinters() {
