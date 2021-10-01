@@ -67,6 +67,16 @@ const def = {
         all_tokens: {},
       };
     },
+    contractInfo() {
+      return {
+        contract_info: {},
+      };
+    },
+    contractConfig() {
+      return {
+        contract_config: {},
+      };
+    },
   },
 };
 export const sodt = createContract({
