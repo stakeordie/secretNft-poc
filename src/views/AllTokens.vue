@@ -1,44 +1,19 @@
 <template>
   <div id="app">
-    <h1>Transfer your assets to recepient</h1>
-    <form @submit.prevent="transfer">
-      <select @change="getNFTInfo" name="" id="" v-model="tokenSelected">
-        <option value="">Select a NFT from your collection</option>
-        <option v-bind:key="t" v-for="t in tokens" :v-model="t">
-          {{ t }}
-        </option>
-      </select>
-      <input type="text" v-model="recipientAddr" />
-      <button :disabled="disabledTransferButton">Transfer</button>
-    </form>
-    <button @click="burnNFT" :disabled="disabledBurnNftButton">Burn NFT</button>
-    <button class="vk" @click="createViewingKey">createViewingKey</button>
-    <dl>
-      <h2>NFT token info:</h2>
-      <dt>Name :</dt>
-      <dd>{{ this.nftInfo.name }}</dd>
-      <dt>Owner :</dt>
-      <dd>{{ NFTOwner }}</dd>
-      <dt>Description :</dt>
-      <dd>{{ this.nftInfo.description }}</dd>
-      <dt>Rarity :</dt>
-      <dd v-if="this.nftInfo.rarity">
-        {{ this.nftInfo.rarity.number }} out of {{ this.nftInfo.rarity.total }}
-      </dd>
-      <dt>image :</dt>
-      <dd>{{ this.nftInfo.image }}</dd>
-      <img v-if="this.nftInfo.image" :src="this.nftInfo.image" style="width:50%; height:50%;" />
-    </dl>
-    <button @click="addMinters">Add minters</button>
+    <h1>List of all NFT’s</h1>
+    <ul>
+        <li v-bind:key="index" v-for="(nft, index) in allNFTsInfo">
+            <h2>{{ tokens[index] }}</h2>
+            <img :src="nft.image" style="width:100px;height:100px;cursor:pointer;" @click="$router.push({name: 'NftDetails', params: { tokenId: tokens[index] }})" />
+        </li>
+    </ul>
   </div>
 </template>
 
 <script>
 import { sodt } from "../contracts/sodt.js";
 import {
-  
   onAccountAvailable,
-  viewingKeyManager,
 } from "@stakeordie/griptape.js";
 
 export default {
@@ -47,103 +22,49 @@ export default {
     return {
       tokenSelected: "",
       recipientAddr: "",
+      token: "",
       NFTOwner: "",
       tokens: [],
-      nftInfo: {
-        rarity: null,
-      },
+      allNFTsInfo: [],
+      nftInfo: null,
     };
   },
   async mounted() {
     onAccountAvailable(async () => {
-      await this.getTokens();
+      await this.getAllTokens();
+      await this.getAllNFTInfo();
     });
   },
   computed: {
       disabledBurnNftButton() {
-          return !this.tokenSelected;
+          return !this.tokens;
       },
-      disabledTransferButton() {
-          return !this.recipientAddr || !this.tokenSelected;
-      }
   },
   methods: {
-    async transfer() {
-      console.log("Transfering assets");
-      if (!this.recipientAddr || !this.tokenSelected) return;
-      const res = await sodt.transfer(
-        this.recipientAddr,
-        this.tokenSelected,
-        `You will transfer ownership of this asset to ${this.recipientAddr}`
-      );
-      console.log(res);
-      await this.getTokens();
-      this.clearNftInfo();
-    },
-    async getTokens() {
+    async getAllTokens() {
       const { token_list } = await sodt.allTokens();
-      console.log(token_list)
+      this.tokens = {...token_list};
       const { tokens } = token_list;
       this.tokens = tokens;
     },
-    async createViewingKey() {
-      const res = await sodt.createViewingKey();
-      if (res.isEmpty()) return;
-      const parsed = res.parse();
-      viewingKeyManager.add(sodt, parsed.viewing_key.key);
+    getAllNFTInfo() {
+        this.tokens.forEach(token => {
+            this.token = token
+            this.getNFTInfo(token)
+        })
+        console.log(this.allNFTsInfo)
     },
-    async getNFTInfo() {
-      const { nft_info } = await sodt.getNftInfo(this.tokenSelected);
-      if (nft_info.properties) {
-        const properties = JSON.parse(nft_info.properties);
-        this.nftInfo = { ...nft_info, ...properties };
-        console.log(this.nftInfo);
-      } else {
-        this.nftInfo = nft_info;
-        console.log("getNFTInfo", nft_info);
-      }
-      this.getOwnerOf();
-    },
-    async getMinters() {
-      const res = await sodt.getMinters();
-      console.log(res);
-    },
-    async addMinters() {
-      const res = await sodt.addMinters([
-        "secret19jr8qetf64taze4ynqfh73vdhdm036hayd3yhn",
-        "secret1enktjqjkjl6efhdssewn3kceufean0heygsak7",
-        "secret12wft3hnpxszrvng6mtp26djvjkqtpjzgc3trqp",
-      ]);
-      console.log(res);
-      await this.getMinters();
-    },
-    async burnNFT() {
-      console.log("burning NFT");
-      const token = this.tokenSelected;
-      if(!this.tokenSelected) return;
-      const res = await sodt.burnNFT(this.tokenSelected);
-      if(res) {
-        console.log("burned "+token+" succesfully")
-      }
-      console.log(res);
-      await this.getTokens();
-      this.clearNftInfo();
-    },
-    clearNftInfo() {
-        this.nftInfo = {
-            rarity: null,
-        };
-        this.NFTOwner = "";
-        this.tokenSelected = "";
-    },
-    async getOwnerOf() {
-      const { owner_of } = await sodt.getOwnerOf(this.tokenSelected);
-      if (owner_of.owner) {
-        const { owner } = owner_of;
-        this.NFTOwner = owner;
-        console.log(this.NFTOwner);
-      } else return;
-    },
+    async getNFTInfo(token) {
+            const { nft_info } = await sodt.getNftInfo(token);
+            if (nft_info.properties) {
+                const properties = JSON.parse(nft_info.properties);
+                this.nftInfo = { ...nft_info, ...properties };
+                this.allNFTsInfo.push(this.nftInfo)
+            } else {
+                this.nftInfo = nft_info;
+                this.allNFTsInfo.push(this.nftInfo)
+            }
+        },
   },
 };
 </script>

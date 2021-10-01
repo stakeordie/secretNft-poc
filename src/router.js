@@ -31,7 +31,6 @@ const router = new Router({
             name: 'AllTokens',
             component: () => import ('./views/AllTokens.vue')
         },
-        },
         {
             path: '/nft-details/:tokenId',
             name: 'NftDetails',
