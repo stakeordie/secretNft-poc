@@ -90,7 +90,7 @@ export default {
         res = await sodt.approve(
           this.permissionAddr,
           this.permissionToken,
-          {"at_time":this.expirationDate}
+          {"at_time": parseInt(this.expirationDate)}
         );
       } else {
         res = await sodt.approve(
@@ -121,7 +121,7 @@ export default {
         if (this.perrmisionWithExpiration && !this.expirationDate) return; 
         res = await sodt.approveAll(
           this.permissionAddr,
-          {"at_time":this.expirationDate}
+          {"at_time": parseInt(this.expirationDate)} 
         );
       } else {
         res = await sodt.approveAll(
