@@ -1,6 +1,9 @@
 <template>
   <div id="app">
     <h1>List of all NFT’s</h1>
+    <h4>search by name</h4>
+    <input type="text" placeholder="name" v-model="ownersName" />
+    <button @click="getAllTokens">search</button>
     <ul>
         <li v-bind:key="index" v-for="(nft, index) in allNFTsInfo">
             <h2>{{ tokens[index] }}</h2>
@@ -11,6 +14,35 @@
 </template>
 
 <script>
+
+const users = [
+    {
+        name: "daniel",
+        token: "secret1kmvv6z6htwkr4wfaxsx08wqp8yay8kgh5x2xxs"
+    },
+    {
+        name: "haidy",
+        token: "secret1enktjqjkjl6efhdssewn3kceufean0heygsak7"
+    },
+    {
+        name: "step tech daddy",
+        token: "secret1660mkxrw598letk3ztw5lnk98hyf6h7x4w9jrl"
+    },
+    {
+        name: "manuel",
+        token: "secret19jr8qetf64taze4ynqfh73vdhdm036hayd3yhn"
+    },
+    {
+        name: "moises",
+        token: "secret15re76j9uxu78hnruwknxg4canfsxzv26d3g4g3"
+    },
+    {
+        name: "taco",
+        token: "secret12wft3hnpxszrvng6mtp26djvjkqtpjzgc3trqp"
+    },
+];
+
+
 import { sodt } from "../contracts/sodt.js";
 import {
   onAccountAvailable,
@@ -27,12 +59,12 @@ export default {
       tokens: [],
       allNFTsInfo: [],
       nftInfo: null,
+      ownersName: ""
     };
   },
   async mounted() {
     onAccountAvailable(async () => {
       await this.getAllTokens();
-      await this.getAllNFTInfo();
     });
   },
   computed: {
@@ -42,10 +74,24 @@ export default {
   },
   methods: {
     async getAllTokens() {
-      const { token_list } = await sodt.allTokens();
-      this.tokens = {...token_list};
-      const { tokens } = token_list;
-      this.tokens = tokens;
+      this.allNFTsInfo = [];
+      if(!this.ownersName) {
+        const { token_list } = await sodt.allTokens();
+        this.tokens = {...token_list};
+        const { tokens } = token_list;
+        this.tokens = tokens;
+      }
+      else {
+        const userInfo = users.filter(user => user.name == this.ownersName || user.token == this.ownersName);
+        const [first] = userInfo;
+        console.table({name: first.name, code: first.token})
+        const { token_list } = await sodt.getTokens(first.token)
+        this.tokens = {...token_list};
+        const { tokens } = token_list;
+        this.tokens = tokens;
+      }
+      console.log(this.tokens)
+      await this.getAllNFTInfo();
     },
     getAllNFTInfo() {
         this.tokens.forEach(token => {

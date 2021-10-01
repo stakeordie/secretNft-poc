@@ -34,10 +34,10 @@ const def = {
         },
       };
     },
-    setGlobalApproval({padding}, view_owner, view_private_metadata, expires) {
+    setGlobalApproval({padding}, requestObject = {}) {
       return {
         handleMsg: {
-          set_global_approval: {expires, view_private_metadata, view_owner,  padding}
+          set_global_approval: {requestObject, padding}
         },
       };
     },
