@@ -41,6 +41,11 @@ const def = {
         minters: {},
       };
     },
+    allTokens() {
+      return {
+        all_tokens: {},
+      };
+    },
   },
 };
 export const sodt = createContract({

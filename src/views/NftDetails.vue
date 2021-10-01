@@ -4,6 +4,7 @@
         <span class="sub-title"> Description </span>
         <p class="description"> {{ nftInfo.description }} </p>
         <p class="owner">Owner: {{ owner }} </p>
+        <p class="owner">Owner name: {{ ownerName }} </p>
         <img :src="nftInfo.image" /> <br/>
         <button @click="burnNFT()">Burn this NFT</button>
         <hr>
@@ -23,6 +24,30 @@
 </template>
 
 <script>
+
+const users = [
+    {
+        name: "daniel",
+        token: "secret1kmvv6z6htwkr4wfaxsx08wqp8yay8kgh5x2xxs"
+    },
+    {
+        name: "haidy",
+        token: "secret1enktjqjkjl6efhdssewn3kceufean0heygsak7"
+    },
+    {
+        name: "techDaddy",
+        token: "secret1660mkxrw598letk3ztw5lnk98hyf6h7x4w9jrl"
+    },
+    {
+        name: "manuel",
+        token: "secret19jr8qetf64taze4ynqfh73vdhdm036hayd3yhn"
+    },
+    {
+        name: "moises",
+        token: "secret15re76j9uxu78hnruwknxg4canfsxzv26d3g4g3"
+    },
+];
+
 import { sodt } from "../contracts/sodt.js";
 import { onAccountAvailable } from "@stakeordie/griptape.js";
 
@@ -35,6 +60,7 @@ export default {
             recipientAddr: "",
             privateMetadata: null,
             nftInfo: null,
+            ownerName: ""
         }
     },
     async mounted() {
@@ -67,6 +93,9 @@ export default {
             if (owner_of.owner) {
                 const { owner } = owner_of;
                 this.owner = owner;
+                const userInfo = users.filter(user => user.token == this.owner);
+                const [first] = userInfo;
+                this.ownerName = first.name;
                 console.log("owner: ", this.owner);
             } else { 
                 return;
