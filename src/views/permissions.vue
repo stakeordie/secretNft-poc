@@ -15,7 +15,7 @@
                 <span>Expires</span>
                 <input type="checkbox" name="expires" v-model="perrmisionWithExpiration">
                 <span v-if="perrmisionWithExpiration">
-                    <input type="number" name="expiration-date" placeholder="seconds" v-model="expirationDate">
+                    <input type="date" name="expiration-date" placeholder="seconds" v-model="expirationDate">
                 </span>
             </div>
             <div class="section">
@@ -90,7 +90,7 @@ export default {
         res = await sodt.approve(
           this.permissionAddr,
           this.permissionToken,
-          {"at_time": parseInt(this.expirationDate)}
+          {"at_time": Math.round((new Date(this.expirationDate)).getTime() / 1000)}
         );
       } else {
         res = await sodt.approve(
@@ -121,7 +121,7 @@ export default {
         if (this.perrmisionWithExpiration && !this.expirationDate) return; 
         res = await sodt.approveAll(
           this.permissionAddr,
-          {"at_time": parseInt(this.expirationDate)} 
+          {"at_time": Math.round((new Date(this.expirationDate)).getTime() / 1000)} 
         );
       } else {
         res = await sodt.approveAll(
