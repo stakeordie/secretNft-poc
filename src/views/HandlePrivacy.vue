@@ -42,7 +42,7 @@
                 <br>
                 <br>
                 <span>Make ownership private for all my nfts</span>
-                <button @click="makeOwnershipPrivate">Hacer privado mombre y mi direccion</button>
+                <button @click="makeOwnershipPrivate">yes</button>
 
             </div> 
         </div>

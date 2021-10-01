@@ -7,6 +7,7 @@
       <button @click="$router.push({name: 'Permissions'})">NFT Permissions</button>
       <button @click="$router.push({name: 'HandlePrivacy'})">Handle Privacy</button>
       <button @click="$router.push({name: 'AllTokens'})">See All Tokens</button>
+      <button @click="$router.push({name: 'ContractInfo'})">Contract Info</button>
     </nav>
     <router-view/>
   </div>

@@ -45,7 +45,12 @@ const router = new Router({
             path: '/handle-privacy',
             name: 'HandlePrivacy',
             component: () => import ('./views/HandlePrivacy.vue')
-        }
+        },
+        {
+            path: '/contract-info',
+            name: 'ContractInfo',
+            component: () => import ('./views/ContractInfo.vue')
+        },
     ]
 });
 
