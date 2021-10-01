@@ -5,7 +5,7 @@
         <p class="description"> {{ nftInfo.description }} </p>
         <p class="owner">Owner: {{ owner }} </p>
         <p class="owner" v-if="ownerName">Owner name: {{ ownerName }} </p>
-        <img style="width:300px;height:300px;" :src="nftInfo.image" /> <br/>
+        <img style="width:300px;height:300px;" :src="getImage(nftInfo)" /> <br/>
         <button @click="burnNFT()">Burn this NFT</button>
         <hr>
         <div class="private-metadata" v-if="privateMetadata">
@@ -143,13 +143,21 @@ export default {
             this.goToMainPage("Transfered");
         },
         async getPrivateMetadata() {
+            console.log("getting private metadata")
             const { private_metadata } = await sodt.getPrivateMetadata(this.tokenId);
+            console.log("private_metadata", private_metadata);
             this.privateMetadata = private_metadata;
             console.log("getPrivateMetadata: ", this.privateMetadata);
         },
         goToMainPage(action) {
             alert("The NFT was " + action);
             this.$router.push({name: 'TransferAsset'});
+        },
+        getImage(nft) {
+            if(nft.image.startsWith('ipfs')) {
+                return 'https://ipfs.io/' + nft.image.replace(':', ''); 
+            }
+            return nft.image;
         }
     }
 }

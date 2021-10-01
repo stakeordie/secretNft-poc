@@ -4,7 +4,7 @@
     <ul>
         <li v-bind:key="index" v-for="(nft, index) in allNFTsInfo">
             <h2>{{ tokens[index] }}</h2>
-            <img :src="nft.image" style="width:100px;height:100px;cursor:pointer;" @click="$router.push({name: 'NftDetails', params: { tokenId: tokens[index] }})" />
+            <img :src="getImage(nft)" style="width:100px;height:100px;cursor:pointer;" @click="$router.push({name: 'NftDetails', params: { tokenId: tokens[index] }})" />
         </li>
     </ul>
   </div>
@@ -55,16 +55,22 @@ export default {
         console.log(this.allNFTsInfo)
     },
     async getNFTInfo(token) {
-            const { nft_info } = await sodt.getNftInfo(token);
-            if (nft_info.properties) {
-                const properties = JSON.parse(nft_info.properties);
-                this.nftInfo = { ...nft_info, ...properties };
-                this.allNFTsInfo.push(this.nftInfo)
-            } else {
-                this.nftInfo = nft_info;
-                this.allNFTsInfo.push(this.nftInfo)
-            }
-        },
+        const { nft_info } = await sodt.getNftInfo(token);
+        if (nft_info.properties) {
+            const properties = JSON.parse(nft_info.properties);
+            this.nftInfo = { ...nft_info, ...properties };
+            this.allNFTsInfo.push(this.nftInfo)
+        } else {
+            this.nftInfo = nft_info;
+            this.allNFTsInfo.push(this.nftInfo)
+        }
+    },
+    getImage(nft) {
+      if(nft.image.startsWith('ipfs')) {
+        return 'https://ipfs.io/' + nft.image.replace(':', ''); 
+      }
+      return nft.image;
+    }
   },
 };
 </script>
