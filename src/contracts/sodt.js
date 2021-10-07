@@ -81,6 +81,6 @@ const def = {
 };
 export const sodt = createContract({
   id: "sodt",
-  at: "secret16h4wr6u90sk5m3eahe3njh4n6wn8c4zhq22s34",
+  at: "secret13jtj93gecfx26d6sgzxcseff44s3ka4z7syyn2",
   definition: extendContract(snip721Def, def),
 });

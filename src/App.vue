@@ -1,16 +1,31 @@
 <template>
   <div id="app">
     <nav>
-      <button @click="$router.push({name: 'TransferAsset'})">Transfer Asset View</button>
-      <button @click="$router.push({name: 'MintNft'})">Mint NFT View</button>
-      <button @click="$router.push({name: 'TransactionHistory'})">Transaction History View</button>
-      <button @click="$router.push({name: 'Permissions'})">NFT Permissions</button>
-      <button @click="$router.push({name: 'HandlePrivacy'})">Handle Privacy</button>
-      <button @click="$router.push({name: 'AllTokens'})">See All Tokens</button>
-      <button @click="$router.push({name: 'ContractInfo'})">Contract Info</button>
-      <button @click="$router.push({name: 'Whitelist'})">Whitelist</button>
+      <button @click="$router.push({ name: 'TransferAsset' })">
+        Transfer Asset View
+      </button>
+      <button @click="$router.push({ name: 'MintNft' })">Mint NFT View</button>
+      <button @click="$router.push({ name: 'TransactionHistory' })">
+        Transaction History View
+      </button>
+      <button @click="$router.push({ name: 'Permissions' })">
+        NFT Permissions
+      </button>
+      <button @click="$router.push({ name: 'HandlePrivacy' })">
+        Handle Privacy
+      </button>
+      <button @click="$router.push({ name: 'AllTokens' })">
+        See All Tokens
+      </button>
+      <button @click="$router.push({ name: 'ContractInfo' })">
+        Contract Info
+      </button>
+      <button @click="$router.push({ name: 'Whitelist' })">Whitelist</button>
+      <button @click="$router.push({ name: 'Instantiate' })">
+        Instantiate
+      </button>
     </nav>
-    <router-view/>
+    <router-view />
   </div>
 </template>
 
