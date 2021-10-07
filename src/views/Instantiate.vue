@@ -17,13 +17,13 @@ export default {
   data() {
     return {
       initMsg: "",
-      codeId: 31025,
+      codeId: 31030,
     };
   },
   methods: {
     async instantiate() {
       console.log("Instantiating contract ...");
-      const label = "Instantiating my contract";
+      const label = (Math.random() * Date.now()).toString();
       var data = this.initMsg;
       var dataArray = data.split("\r\n");
 

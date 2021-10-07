@@ -13,45 +13,63 @@ const def = {
         },
       };
     },
-    mintNft({ padding }, token_id = "", owner = "", public_metadata  = {}, private_metadata  = {}, serial_number = {}, royalty_info  = {}, memo = "") {
+    mintNft(
+      { padding },
+      token_id = "",
+      owner = "",
+      public_metadata = {},
+      private_metadata = {},
+      serial_number = {},
+      royalty_info = {},
+      memo = ""
+    ) {
       return {
         handleMsg: {
-          mint_nft: { token_id, owner, public_metadata, private_metadata, serial_number, royalty_info, memo, padding },
+          mint_nft: {
+            token_id,
+            owner,
+            public_metadata,
+            private_metadata,
+            serial_number,
+            royalty_info,
+            memo,
+            padding,
+          },
         },
       };
     },
     burnNFT({ padding }, token_id) {
       return {
         handleMsg: {
-          burn_nft: {token_id, padding},
+          burn_nft: { token_id, padding },
         },
       };
     },
     batchMintNft({ padding }, mints = []) {
       return {
         handleMsg: {
-          batch_mint_nft: { mints, padding }
+          batch_mint_nft: { mints, padding },
         },
       };
     },
-    setGlobalApproval({padding}, requestObject = {}, expires) {
+    setGlobalApproval({ padding }, requestObject = {}, expires) {
       return {
         handleMsg: {
-          set_global_approval: {expires, requestObject, padding}
+          set_global_approval: { expires, requestObject, padding },
         },
       };
     },
-    makeOwnershipPrivate({padding}) {
+    makeOwnershipPrivate({ padding }) {
       return {
         handleMsg: {
-          make_ownership_private: {padding}
+          make_ownership_private: { padding },
         },
       };
     },
-    setMetadata({padding}, token_id, public_metadata  = {}) {
+    setMetadata({ padding }, token_id, public_metadata = {}) {
       return {
         handleMsg: {
-          set_metadata: {public_metadata, token_id, padding}
+          set_metadata: { public_metadata, token_id, padding },
         },
       };
     },
@@ -79,8 +97,11 @@ const def = {
     },
   },
 };
+
+const contractAddress = "secret1e64fhr5xh6d22a2v0sks80ltpgvjs568x5nty7";
+
 export const sodt = createContract({
-  id: "sodt",
-  at: "secret13jtj93gecfx26d6sgzxcseff44s3ka4z7syyn2",
+  id: contractAddress,
+  at: contractAddress,
   definition: extendContract(snip721Def, def),
 });

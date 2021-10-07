@@ -8,48 +8,53 @@
     <input type="text" placeholder="nft token" v-model="currentToken" />
     <button @click="searchByToken">search</button>
     <ul>
-        <li v-bind:key="index" v-for="(nft, index) in allNFTsInfo">
-            <h2>{{ tokens[index] }}</h2>
-            <img :src="getImage(nft)" style="width:100px;height:100px;cursor:pointer;" @click="$router.push({name: 'NftDetails', params: { tokenId: tokens[index] }})" />
-        </li>
+      <li v-bind:key="index" v-for="(nft, index) in allNFTsInfo">
+        <h2>{{ tokens[index] }}</h2>
+        <img
+          :src="getImage(nft)"
+          style="width: 100px; height: 100px; cursor: pointer"
+          @click="
+            $router.push({
+              name: 'NftDetails',
+              params: { tokenId: tokens[index] },
+            })
+          "
+        />
+      </li>
     </ul>
   </div>
 </template>
 
 <script>
-
 const users = [
-    {
-        name: "daniel",
-        token: "secret1kmvv6z6htwkr4wfaxsx08wqp8yay8kgh5x2xxs"
-    },
-    {
-        name: "haidy",
-        token: "secret1enktjqjkjl6efhdssewn3kceufean0heygsak7"
-    },
-    {
-        name: "step tech daddy",
-        token: "secret1660mkxrw598letk3ztw5lnk98hyf6h7x4w9jrl"
-    },
-    {
-        name: "manuel",
-        token: "secret19jr8qetf64taze4ynqfh73vdhdm036hayd3yhn"
-    },
-    {
-        name: "moises",
-        token: "secret15re76j9uxu78hnruwknxg4canfsxzv26d3g4g3"
-    },
-    {
-        name: "taco",
-        token: "secret12wft3hnpxszrvng6mtp26djvjkqtpjzgc3trqp"
-    },
+  {
+    name: "daniel",
+    token: "secret1kmvv6z6htwkr4wfaxsx08wqp8yay8kgh5x2xxs",
+  },
+  {
+    name: "haidy",
+    token: "secret1enktjqjkjl6efhdssewn3kceufean0heygsak7",
+  },
+  {
+    name: "step tech daddy",
+    token: "secret1660mkxrw598letk3ztw5lnk98hyf6h7x4w9jrl",
+  },
+  {
+    name: "manuel",
+    token: "secret19jr8qetf64taze4ynqfh73vdhdm036hayd3yhn",
+  },
+  {
+    name: "moises",
+    token: "secret15re76j9uxu78hnruwknxg4canfsxzv26d3g4g3",
+  },
+  {
+    name: "taco",
+    token: "secret12wft3hnpxszrvng6mtp26djvjkqtpjzgc3trqp",
+  },
 ];
 
-
 import { sodt } from "../contracts/sodt.js";
-import {
-  onAccountAvailable,
-} from "@stakeordie/griptape.js";
+import { onAccountAvailable } from "@stakeordie/griptape.js";
 
 export default {
   name: "allTokens",
@@ -63,27 +68,31 @@ export default {
       allNFTsInfo: [],
       nftInfo: null,
       ownersName: "",
-      currentToken:""
+      currentToken: "",
     };
   },
   async mounted() {
     onAccountAvailable(async () => {
+      console.log("Loading...");
       await this.getAllTokens();
+      console.log("Loaded");
     });
   },
   computed: {
-      disabledBurnNftButton() {
-          return !this.tokens;
-      },
+    disabledBurnNftButton() {
+      return !this.tokens;
+    },
   },
   methods: {
     async searchByOwnersName() {
       this.allNFTsInfo = [];
-      const userInfo = users.filter(user => user.name == this.ownersName || user.token == this.ownersName);
+      const userInfo = users.filter(
+        (user) => user.name == this.ownersName || user.token == this.ownersName
+      );
       const [first] = userInfo;
-      console.table({name: first.name, code: first.token})
-      const { token_list } = await sodt.getTokens(first.token)
-      this.tokens = {...token_list};
+      console.table({ name: first.name, code: first.token });
+      const { token_list } = await sodt.getTokens(first.token);
+      this.tokens = { ...token_list };
       const { tokens } = token_list;
       this.tokens = tokens;
       await this.getAllNFTInfo();
@@ -91,46 +100,49 @@ export default {
     async searchByToken() {
       this.allNFTsInfo = [];
       const { token_list } = await sodt.allTokens();
-      this.tokens = {...token_list};
+      this.tokens = { ...token_list };
       const { tokens } = token_list;
-      const token = tokens.filter(thisToken => thisToken == this.currentToken);
-      console.log(token)
+      const token = tokens.filter(
+        (thisToken) => thisToken == this.currentToken
+      );
+      console.log(token);
       this.tokens = token;
       await this.getAllNFTInfo();
     },
     async getAllTokens() {
       this.allNFTsInfo = [];
       const { token_list } = await sodt.allTokens();
-      this.tokens = {...token_list};
+      console.log(token_list);
+      this.tokens = { ...token_list };
       const { tokens } = token_list;
       this.tokens = tokens;
-      console.log(this.tokens)
+      console.log(this.tokens);
       await this.getAllNFTInfo();
     },
     getAllNFTInfo() {
-        this.tokens.forEach(token => {
-            this.token = token
-            this.getNFTInfo(token)
-        })
-        console.log(this.allNFTsInfo)
+      this.tokens.forEach((token) => {
+        this.token = token;
+        this.getNFTInfo(token);
+      });
+      console.log(this.allNFTsInfo);
     },
     async getNFTInfo(token) {
-        const { nft_info } = await sodt.getNftInfo(token);
-        if (nft_info.properties) {
-            const properties = JSON.parse(nft_info.properties);
-            this.nftInfo = { ...nft_info, ...properties };
-            this.allNFTsInfo.push(this.nftInfo)
-        } else {
-            this.nftInfo = nft_info;
-            this.allNFTsInfo.push(this.nftInfo)
-        }
+      const { nft_info } = await sodt.getNftInfo(token);
+      if (nft_info.properties) {
+        const properties = JSON.parse(nft_info.properties);
+        this.nftInfo = { ...nft_info, ...properties };
+        this.allNFTsInfo.push(this.nftInfo);
+      } else {
+        this.nftInfo = nft_info;
+        this.allNFTsInfo.push(this.nftInfo);
+      }
     },
     getImage(nft) {
-      if(nft.image.startsWith('ipfs')) {
-        return 'https://ipfs.io/' + nft.image.replace(':', ''); 
+      if (nft.image.startsWith("ipfs")) {
+        return "https://ipfs.io/" + nft.image.replace(":", "");
       }
       return nft.image;
-    }
+    },
   },
 };
 </script>
