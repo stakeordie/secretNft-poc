@@ -50,7 +50,7 @@ export default {
     onAccountAvailable(async () => {
       await this.getAllContractInfo();
       const fn = this.getFunction();
-      new P5((_) => fn(_, 1001));
+      new P5((_) => fn(_, 1000010));
       console.log(fn);
     });
   },
