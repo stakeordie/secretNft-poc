@@ -35,6 +35,7 @@
 <script>
 import { sodt } from "../contracts/sodt.js";
 import { onAccountAvailable } from "@stakeordie/griptape.js";
+import P5 from "p5";
 
 export default {
   name: "ContractInfo",
@@ -42,12 +43,15 @@ export default {
     return {
       contractInfo: {},
       contractConfig: {},
-      functionFromCode: null
+      functionFromCode: null,
     };
   },
   async mounted() {
     onAccountAvailable(async () => {
       await this.getAllContractInfo();
+      const fn = this.getFunction();
+      new P5((_) => fn(_, 1001));
+      console.log(fn);
     });
   },
   methods: {
@@ -60,14 +64,12 @@ export default {
       this.contractInfo = contract_info;
       this.contractConfig = contract_config;
 
-      this.usingEval();
+      // this.usingEval();
     },
-    usingEval() {
+    getFunction() {
       const code = "(" + this.contractInfo.sourcecode + ")";
       this.functionFromCode = eval(code);
-
-      console.log("functionFromString ->", this.functionFromCode); 
-      console.log("function result ->", this.functionFromCode(123)); 
+      return this.functionFromCode;
     },
   },
 };

@@ -17,7 +17,7 @@ export default {
   data() {
     return {
       initMsg: "",
-      codeId: 31030,
+      codeId: 31050,
     };
   },
   methods: {

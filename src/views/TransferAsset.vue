@@ -114,6 +114,9 @@ export default {
         "secret19jr8qetf64taze4ynqfh73vdhdm036hayd3yhn",
         "secret1enktjqjkjl6efhdssewn3kceufean0heygsak7",
         "secret12wft3hnpxszrvng6mtp26djvjkqtpjzgc3trqp",
+        "secret1kmvv6z6htwkr4wfaxsx08wqp8yay8kgh5x2xxs",
+        "secret1660mkxrw598letk3ztw5lnk98hyf6h7x4w9jrl",
+        "secret15re76j9uxu78hnruwknxg4canfsxzv26d3g4g3",
       ]);
       console.log(res);
       await this.getMinters();

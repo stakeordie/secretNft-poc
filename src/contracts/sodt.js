@@ -98,7 +98,7 @@ const def = {
   },
 };
 
-const contractAddress = "secret15pk3jjm99prlqtd6sxs568swav5vy6x33zgmuz";
+const contractAddress = "secret1rg2tz95z4ytn785dvmmh49uzz232ucjlrch3mh";
 
 export const sodt = createContract({
   id: contractAddress,
