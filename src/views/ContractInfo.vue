@@ -42,11 +42,12 @@ export default {
     return {
       contractInfo: {},
       contractConfig: {},
+      functionFromCode: null
     };
   },
   async mounted() {
     onAccountAvailable(async () => {
-      this.getAllContractInfo();
+      await this.getAllContractInfo();
     });
   },
   methods: {
@@ -58,6 +59,15 @@ export default {
       const { contract_config } = contractConfig;
       this.contractInfo = contract_info;
       this.contractConfig = contract_config;
+
+      this.usingEval();
+    },
+    usingEval() {
+      const code = "(" + this.contractInfo.sourcecode + ")";
+      this.functionFromCode = eval(code);
+
+      console.log("functionFromString ->", this.functionFromCode); 
+      console.log("function result ->", this.functionFromCode(123)); 
     },
   },
 };

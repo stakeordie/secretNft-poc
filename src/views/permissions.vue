@@ -65,7 +65,7 @@ export default {
       this.tokens = tokens;
     },
     async getNFTInfo() {
-      const { nft_info } = await sodt.getNftInfo(this.tokenSelected);
+      const { nft_info } = await sodt.getNftInfo(this.permissionToken);
       const properties = JSON.parse(nft_info.properties);
       this.nftInfo = { ...nft_info, ...properties };
       console.log(this.nftInfo);
