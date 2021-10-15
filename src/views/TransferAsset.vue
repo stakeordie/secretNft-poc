@@ -12,7 +12,14 @@
       <button :disabled="disabledTransferButton">Transfer</button>
     </form>
     <button @click="burnNFT" :disabled="disabledBurnNftButton">Burn NFT</button>
-    <button @click="$router.push({name: 'NftDetails', params: { tokenId: tokenSelected }})" :disabled="disabledBurnNftButton">Nft Details</button>
+    <button
+      @click="
+        $router.push({ name: 'NftDetails', params: { tokenId: tokenSelected } })
+      "
+      :disabled="disabledBurnNftButton"
+    >
+      Nft Details
+    </button>
     <button class="vk" @click="createViewingKey">createViewingKey</button>
     <dl>
       <h2>NFT token info:</h2>
@@ -28,7 +35,11 @@
       </dd>
       <dt>image :</dt>
       <dd>{{ this.nftInfo.image }}</dd>
-      <img v-if="this.nftInfo.image" :src="this.nftInfo.image" style="width:50%; height:50%;" />
+      <img
+        v-if="this.nftInfo.image"
+        :src="this.nftInfo.image"
+        style="width: 50%; height: 50%"
+      />
     </dl>
     <button @click="addMinters">Add minters</button>
   </div>
@@ -36,6 +47,7 @@
 
 <script>
 import { sodt } from "../contracts/sodt.js";
+
 import {
   getAddress,
   onAccountAvailable,
@@ -61,12 +73,12 @@ export default {
     });
   },
   computed: {
-      disabledBurnNftButton() {
-          return !this.tokenSelected;
-      },
-      disabledTransferButton() {
-          return !this.recipientAddr || !this.tokenSelected;
-      }
+    disabledBurnNftButton() {
+      return !this.tokenSelected;
+    },
+    disabledTransferButton() {
+      return !this.recipientAddr || !this.tokenSelected;
+    },
   },
   methods: {
     async transfer() {
@@ -114,6 +126,10 @@ export default {
         "secret19jr8qetf64taze4ynqfh73vdhdm036hayd3yhn",
         "secret1enktjqjkjl6efhdssewn3kceufean0heygsak7",
         "secret12wft3hnpxszrvng6mtp26djvjkqtpjzgc3trqp",
+        "secret1hcakhdfaqfd9ja0h8vy5vxe3le0sfgaj7m9zpw",
+        "secret19drujav40s02vl0h54qlulj2edqmw353cxhdk0",
+        "secret1rnn5sxdh5xv46tteatv4dpkp2us0jhrqsx34tq",
+        "secret1gxl8430hm5cg5frtrcpxh3wnylzl75wk3emzt0",
         "secret1kmvv6z6htwkr4wfaxsx08wqp8yay8kgh5x2xxs",
         "secret1660mkxrw598letk3ztw5lnk98hyf6h7x4w9jrl",
         "secret15re76j9uxu78hnruwknxg4canfsxzv26d3g4g3",
@@ -124,21 +140,21 @@ export default {
     async burnNFT() {
       console.log("burning NFT");
       const token = this.tokenSelected;
-      if(!this.tokenSelected) return;
+      if (!this.tokenSelected) return;
       const res = await sodt.burnNFT(this.tokenSelected);
-      if(res) {
-        console.log("burned "+token+" succesfully")
+      if (res) {
+        console.log("burned " + token + " succesfully");
       }
       console.log(res);
       await this.getTokens();
       this.clearNftInfo();
     },
     clearNftInfo() {
-        this.nftInfo = {
-            rarity: null,
-        };
-        this.NFTOwner = "";
-        this.tokenSelected = "";
+      this.nftInfo = {
+        rarity: null,
+      };
+      this.NFTOwner = "";
+      this.tokenSelected = "";
     },
     async getOwnerOf() {
       const { owner_of } = await sodt.getOwnerOf(this.tokenSelected);
