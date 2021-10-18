@@ -1,6 +1,8 @@
 <template>
   <div id="app">
     <h1>Instantiate your contract here</h1>
+    <p>Code id :</p>
+    <input type="number" v-model="codeId">
     <p>Paste your init msg here</p>
     <textarea v-model="initMsg" name="" id="" cols="50" rows="30">
       some random text 
@@ -17,7 +19,7 @@ export default {
   data() {
     return {
       initMsg: "",
-      codeId: 31204,
+      codeId: 0,
     };
   },
   methods: {
