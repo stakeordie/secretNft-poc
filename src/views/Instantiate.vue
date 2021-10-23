@@ -1,8 +1,10 @@
 <template>
   <div id="app">
     <h1>Instantiate your contract here</h1>
+    <p>Label :</p>
+    <input type="number" v-model="label" />
     <p>Code id :</p>
-    <input type="number" v-model="codeId">
+    <input type="number" v-model="codeId" />
     <p>Paste your init msg here</p>
     <textarea v-model="initMsg" name="" id="" cols="50" rows="30">
       some random text 
@@ -19,13 +21,14 @@ export default {
   data() {
     return {
       initMsg: "",
-      codeId: 0,
+      codeId: undefined,
+      label: "",
     };
   },
   methods: {
     async instantiate() {
+      if (!this.label || this.codeId || this.initMsg) return;
       console.log("Instantiating contract ...");
-      const label = (Math.random() * Date.now()).toString();
       var data = this.initMsg;
       var dataArray = data.split("\r\n");
 
@@ -34,7 +37,7 @@ export default {
         console.log(dataArray[i]);
       }
       const init = dataArray[0];
-      const res = await instantiate(this.codeId, init, label);
+      const res = await instantiate(this.codeId, init, this.label);
       console.log("Contract instantiated");
       console.log(res);
     },
