@@ -4,7 +4,7 @@ import router from "./router";
 import { getKeplrAccountProvider, gripApp } from "@stakeordie/griptape.js";
 Vue.config.productionTip = false;
 
-const restUrl = "https://api.holodeck.stakeordie.com";
+const restUrl = "https://bridge-api-manager.azure-api.net/";
 const provider = getKeplrAccountProvider();
 
 gripApp(restUrl, provider, () => {
